@@ -1,0 +1,25 @@
+{
+  "name": "iss_space_station_ruby",
+  "private": true,
+  "scripts": {
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@rails/webpacker": "3.5",
+    "axios": "^0.18.0",
+    "response": "^0.18.0",
+    "vue": "^2.5.22",
+    "vue-loader": "14.2.2",
+    "vue-template-compiler": "^2.5.22",
+    "vue2-google-maps": "^0.10.5",
+    "vuejs-datepicker": "^1.5.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-eslint": "^3.4.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.12.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "webpack-dev-server": "2.11.2"
+  }
+}
