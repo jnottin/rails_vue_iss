@@ -6,26 +6,24 @@
 </template>
 
 <script>
-import {eventBus} from "../main";
+import { eventBus } from "../main";
 
 export default {
-  name: 'Header',
-  data () {
+  name: "Header",
+  data() {
     return {
-        center: ''
-    }
+      center: ""
+    };
   },
   created() {
-        eventBus.$on('send-center', (center) => {
-            this.center = center
-        });
-    },
-  methods: {
-    }
-  }
+    eventBus.$on("send-center", center => {
+      this.center = center;
+    });
+  },
+  methods: {}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>
