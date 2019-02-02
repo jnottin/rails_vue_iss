@@ -4,3 +4,5 @@ IDEAS:
     - USE GOOGLE ROUTES TO SHOW HOW TO GET TO WHERE THE SPACE STATION IS 
     - SHOW ASTEROIDS AS OTHER MARKERS ON THE MAP
     - 
+
+    shows all tv satelites: https://www.n2yo.com/rest/v1/satellite/above/41.702/-76.014/0/180/34/&apiKey=SWYY5P-THKE7U-HY6XQG-3Y65

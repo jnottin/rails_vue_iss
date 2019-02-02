@@ -1,12 +1,37 @@
 <template>
   <div>
     <div>
+      <form @submit.prevent="getOtherSatelitesLocation">
+        <select v-model="selectedOtherSat">
+          <option disabled value>See Different Industry Satelites!</option>
+          <option value="18">Amateur Radio</option>
+          <option value="8">Disaster Monitoring</option>
+          <option value="6">Earth Resources</option>
+          <option value="29">Education</option>
+          <option value="28">Engineering</option>
+          <option value="50">Global Positioning System (GPS) Constellation</option>
+          <option value="20">Global Positioning System (GPS) Operational</option>
+          <option value="30">Military</option>
+          <option value="24">Navy Navigation Satellite System</option>
+          <option value="31">Radar Calibration</option>
+          <option value="25">Russian LEO Navigation</option>
+          <option value="7">Search & Rescue</option>
+          <option value="26">Space & Earth Science</option>
+          <option value="34">TV</option>
+          <option value="3">Weather</option>
+          <option value="33">XM & Sirius</option>
+          <option value="CLEAR">CLEAR SATELITES FROM MAP</option>
+        </select>
+        <input type="submit" value="Submit">
+      </form>
+      <div v-if="otherSatelitesMarkers">{{otherSatelitesMarkers.length}} Satelites</div>
+      <!-- <div>{{OtherSatelitesInfo}}</div> -->
       <button @click="getISSCurrentLocation">See ISS Now</button>
-      <!-- <button @click="geolocate">See Where You Are Now</button> -->
+      <button @click="geolocate">See Where You Are Now</button>
       <h2>Search and add a pin</h2>
       <label>
         <gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
-        <button @click="addMarker">Add</button>
+        <button @click="searchLocationByInput">Search Area By Location</button>
       </label>
       <br>
       <h2>Where was the iss x hours ago?</h2>
@@ -21,7 +46,8 @@
       </form>
     </div>
     <br>
-    <gmap-map :center="center" :zoom="3" style="width:100%;  height: 400px;">
+    <gmap-map :center="center" :zoom="mapZoom" style="width:100%;  height: 400px;">
+      <gmap-marker :key="index" v-for="(m, index) in otherSatelitesMarkers" :position="m.position"></gmap-marker>
       <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position"></gmap-marker>
       <!-- <gmap-custom-marker :key="index" v-for="(m, index) in markers" :position="m.position">
         <img src="https://i.imgur.com/mgCEm44.jpg" style="width: 40px; height: 40px;">
@@ -47,15 +73,18 @@ export default {
   },
   data() {
     return {
-      // default to montreal to keep it simple
-      // change this to whatever makes sense
       center: { lat: 45.508, lng: -73.587 },
       markers: [],
+      mapZoom: 3,
       issCurrentMarker: { lat: "", lng: "" },
       places: [],
       currentPlace: null,
-      issInfo: "",
-      selectedIssDate: ""
+      issCurrentInfo: "",
+      issSelectedDateInfo: "",
+      selectedIssDate: "",
+      selectedOtherSat: "",
+      otherSatelitesInfo: "",
+      otherSatelitesMarkers: ""
     };
   },
 
@@ -65,27 +94,54 @@ export default {
 
   methods: {
     // compareTwoDates(d1, d2) {},
+    getOtherSatelitesLocation() {
+      this.otherSatelitesInfo = "";
+      this.otherSatelitesMarkers = "";
+      if (this.selectedOtherSat != "CLEAR") {
+        axios
+          // .get(
+          //   "https://www.n2yo.com/rest/v1/satellite/above/41.702/-6.014/0/180/8/&apiKey=SWYY5P-THKE7U-HY6XQG-3Y65"
+          // )
+          .get(
+            "https://www.n2yo.com/rest/v1/satellite/above/41.702/-6.014/0/180/" +
+              this.selectedOtherSat +
+              "/&apiKey=SWYY5P-THKE7U-HY6XQG-3Y65"
+          )
+          .then(response => {
+            this.otherSatelitesInfo = response.data;
+            var satellitesArray = this.otherSatelitesInfo.above;
+            var otherSatelitesMarkers1 = [];
+            satellitesArray.forEach(function(satellite) {
+              const marker = {
+                lat: satellite.satlat,
+                lng: satellite.satlng
+              };
+              otherSatelitesMarkers1.push({ position: marker });
+            });
+            this.otherSatelitesMarkers = otherSatelitesMarkers1;
+            console.log(this.otherSatelitesMarkers);
+          });
+      }
+    },
     getISSCurrentLocation() {
       var dateNow = Date.now();
+      console.log(Date(dateNow));
       axios
-        .get(
-          " https://api.wheretheiss.at/v1/satellites/25544/positions?timestamps=" +
-            dateNow +
-            "&units=miles"
-        )
+        .get(" https://api.wheretheiss.at/v1/satellites/25544")
         .then(response => {
           var formattedTime = this.realTime(response.data.timestamp);
           response.data.formattedTime = formattedTime;
-          this.issInfo = response.data;
+          this.issCurrentInfo = response.data;
           this.center = {
-            lat: parseFloat(response.data[0]["latitude"]),
-            lng: parseFloat(response.data[0]["longitude"])
+            lat: parseFloat(response.data["latitude"]),
+            lng: parseFloat(response.data["longitude"])
           };
           this.issCurrentMarker = {
-            lat: parseFloat(response.data[0]["latitude"]),
-            lng: parseFloat(response.data[0]["longitude"])
+            lat: parseFloat(response.data["latitude"]),
+            lng: parseFloat(response.data["longitude"])
           };
           eventBus.$emit("send-center", this.center);
+          // eventBus.$emit("send-markers", this.markers, this.issCurrentInfo);
         });
     },
     findISSByTimeStamp(timestamp) {
@@ -103,15 +159,16 @@ export default {
             lng: parseFloat(response.data[0]["longitude"])
           };
           this.markIssLocation();
+          this.mapZoom = 3;
+          eventBus.$emit("send-center", this.center);
         });
     },
     IssAtSpecificTime() {
-      console.log(this.selectedIssDate);
       var selectedIssDateTimestamp = Math.round(
         this.selectedIssDate.getTime() / 1000
       );
-      console.log(selectedIssDateTimestamp);
       this.findISSByTimeStamp(selectedIssDateTimestamp);
+      this.mapZoom = 3;
 
       this.selectedIssDate = null;
     },
@@ -128,15 +185,13 @@ export default {
         this.center = marker;
       }
     },
-    addMarker() {
+    searchLocationByInput() {
       if (this.currentPlace) {
-        const marker = {
+        this.center = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng()
         };
-        this.markers.push({ position: marker });
-        this.places.push(this.currentPlace);
-        this.center = marker;
+        this.mapZoom = 10;
         this.currentPlace = null;
       }
     },
@@ -157,7 +212,7 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        this.addMarker();
+        this.mapZoom = 10;
       });
     }
   }
