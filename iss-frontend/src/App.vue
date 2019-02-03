@@ -3,6 +3,7 @@
     <h1>App Page</h1>
     <Header></Header>
     <GoogleMap/>
+    <PassTimes></PassTimes>
     <router-view/>
   </div>
 </template>
@@ -10,12 +11,14 @@
 <script>
 import Header from "@/components/Header";
 import GoogleMap from "@/components/GoogleMap";
+import PassTimes from "@/components/PassTimes";
 
 export default {
   name: "App",
   components: {
     Header,
-    GoogleMap
+    GoogleMap,
+    PassTimes
   },
   data() {
     return {};

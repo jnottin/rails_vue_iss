@@ -34,7 +34,7 @@
         <button @click="searchLocationByInput">Search Area By Location</button>
       </label>
       <br>
-      <h2>Where was the iss x hours ago?</h2>
+      <h2>Has the ISS been messing around on us 🧐? Enter in a date and time below to check where it was and even where it's going!</h2>
       <form @submit.prevent="IssAtSpecificTime">
         <date-picker
           v-model="selectedIssDate"
@@ -90,6 +90,7 @@ export default {
 
   mounted() {
     this.getISSCurrentLocation();
+    // eventBus.$emit("send-timestamp-conversion", this.realTime);
   },
 
   methods: {
@@ -99,9 +100,6 @@ export default {
       this.otherSatelitesMarkers = "";
       if (this.selectedOtherSat != "CLEAR") {
         axios
-          // .get(
-          //   "https://www.n2yo.com/rest/v1/satellite/above/41.702/-6.014/0/180/8/&apiKey=SWYY5P-THKE7U-HY6XQG-3Y65"
-          // )
           .get(
             "https://www.n2yo.com/rest/v1/satellite/above/41.702/-6.014/0/180/" +
               this.selectedOtherSat +
@@ -124,8 +122,6 @@ export default {
       }
     },
     getISSCurrentLocation() {
-      var dateNow = Date.now();
-      console.log(Date(dateNow));
       axios
         .get(" https://api.wheretheiss.at/v1/satellites/25544")
         .then(response => {

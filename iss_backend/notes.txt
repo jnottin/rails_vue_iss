@@ -5,4 +5,24 @@ IDEAS:
     - SHOW ASTEROIDS AS OTHER MARKERS ON THE MAP
     - 
 
+FUNCTIONALITY:
+    PRIMARY:
+        -CRD PASS TIMES - CRD for places and pass times for the ISS
+
+    SECONDARY: 
+        -CUSTOM MARKERS - for new time for ISS and for other satelites
+        -INFOWINDOW - make info windows for all markers. ISS, velocity, lat/lng -- Other Satelites: name, velocity etc
+
+    THIRD:
+        -Show tracks for where the ISS has been and draw a line to current position
+
+
     shows all tv satelites: https://www.n2yo.com/rest/v1/satellite/above/41.702/-76.014/0/180/34/&apiKey=SWYY5P-THKE7U-HY6XQG-3Y65
+
+    Model:
+        PassLocationTimes:
+            -location: {
+                name:
+                coordinates:
+            }
+            -passes: []

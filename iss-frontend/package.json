@@ -10,8 +10,10 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dates-between": "^1.1.0",
     "vue": "^2.5.2",
+    "vue-meta": "^1.5.8",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^2.9.1",
     "vue2-gmap-custom-marker": "^5.3.1",
