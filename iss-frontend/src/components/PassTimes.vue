@@ -38,16 +38,16 @@ export default {
   },
   methods: {
     saveLocationPassTimes() {
+      console.log(this.currentPlace);
       axios
         .post("http://localhost:3000/addTimePass", {
-          location: {
-            name: this.currentPlace.formatted_address,
-            coordinates: this.currentPlace.coordinates
-          },
+          name: this.currentPlace.formatted_address,
+          lat: this.currentPlace.coordinates.lat,
+          lng: this.currentPlace.coordinates.lng,
           passes: this.passTimes.passes
         })
         .then(response => {
-          console.log(res);
+          console.log(response);
         })
         .catch(err => {
           console.log(err);
@@ -74,7 +74,7 @@ export default {
         console.log(this.passTimes);
       });
 
-      this.currentPlace = null;
+      // this.currentPlace = null;
     },
     realTime: function(timestamp) {
       var date = new Date(timestamp * 1000);

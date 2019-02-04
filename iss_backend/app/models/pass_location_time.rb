@@ -1,0 +1,2 @@
+class PassLocationTime < ApplicationRecord
+end
