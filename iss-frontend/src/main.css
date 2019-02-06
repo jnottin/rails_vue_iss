@@ -1,0 +1,39 @@
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+}
+
+.mapSearchButtons {
+  background-color: white;
+}
+
+.searchButton {
+  display: inline;
+  padding: 20px;
+  margin: 10px;
+}
+
+/* .mapNpassTimesGrid {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-template-rows: 100%;
+} */
+
+.map {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.passTimes {
+  grid-row: 1;
+  grid-column: 2;
+  background-color: rgb(238, 236, 236);
+  overflow: scroll;
+}
+
+.findPassTimeButton {
+  margin-bottom: 40px;
+}
+
+

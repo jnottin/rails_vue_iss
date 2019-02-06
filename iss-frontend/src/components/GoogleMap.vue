@@ -1,7 +1,28 @@
 <template>
   <div>
     <div>
-      <form @submit.prevent="getOtherSatelitesLocation">
+      <br>
+      <h1>Has the ISS been messing around on us 🧐?</h1>
+      <h2>Enter in a date and time below to check where the ISS was or even where it's going!</h2>
+      <form @submit.prevent="IssAtSpecificTime">
+        <date-picker
+          v-model="selectedIssDate"
+          lang="en"
+          type="datetime"
+          format="[on] MM-DD-YYYY [at] HH:mm"
+        ></date-picker>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <br>
+    <div class="mapSearchButtons">
+      <button @click="getISSCurrentLocation" class="searchButton">See ISS Now</button>
+      <button @click="geolocate" class="searchButton">See Where You Are Now</button>
+      <label class="searchButton">
+        <gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
+        <button @click="searchLocationByInput">Center Map On A Location</button>
+      </label>
+      <form @submit.prevent="getOtherSatelitesLocation" class="searchButton">
         <select v-model="selectedOtherSat">
           <option disabled value>See Different Industry Satelites!</option>
           <option value="18">Amateur Radio</option>
@@ -25,28 +46,8 @@
         <input type="submit" value="Submit">
       </form>
       <div v-if="otherSatelitesMarkers">{{otherSatelitesMarkers.length}} Satelites</div>
-      <!-- <div>{{OtherSatelitesInfo}}</div> -->
-      <button @click="getISSCurrentLocation">See ISS Now</button>
-      <button @click="geolocate">See Where You Are Now</button>
-      <h2>Search and add a pin</h2>
-      <label>
-        <gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
-        <button @click="searchLocationByInput">Search Area By Location</button>
-      </label>
-      <br>
-      <h2>Has the ISS been messing around on us 🧐? Enter in a date and time below to check where it was and even where it's going!</h2>
-      <form @submit.prevent="IssAtSpecificTime">
-        <date-picker
-          v-model="selectedIssDate"
-          lang="en"
-          type="datetime"
-          format="[on] MM-DD-YYYY [at] HH:mm"
-        ></date-picker>
-        <input type="submit" value="Submit">
-      </form>
     </div>
-    <br>
-    <gmap-map :center="center" :zoom="mapZoom" style="width:100%;  height: 400px;">
+    <gmap-map :center="center" :zoom="mapZoom" style="width:100%;  height: 600px;">
       <gmap-marker :key="index" v-for="(m, index) in otherSatelitesMarkers" :position="m.position"></gmap-marker>
       <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position"></gmap-marker>
       <!-- <gmap-custom-marker :key="index" v-for="(m, index) in markers" :position="m.position">
@@ -118,6 +119,7 @@ export default {
             });
             this.otherSatelitesMarkers = otherSatelitesMarkers1;
             console.log(this.otherSatelitesMarkers);
+            this.mapZoom = 3;
           });
       }
     },
@@ -138,6 +140,7 @@ export default {
           };
           eventBus.$emit("send-center", this.center);
           // eventBus.$emit("send-markers", this.markers, this.issCurrentInfo);
+          this.mapZoom = 3;
         });
     },
     findISSByTimeStamp(timestamp) {

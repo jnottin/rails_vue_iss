@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <h1>App Page</h1>
     <Header></Header>
-    <GoogleMap/>
-    <PassTimes></PassTimes>
+    <div class="mapNpassTimesGrid">
+      <GoogleMap class="map"></GoogleMap>
+      <PassTimes class="passTimes"></PassTimes>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -12,6 +13,7 @@
 import Header from "@/components/Header";
 import GoogleMap from "@/components/GoogleMap";
 import PassTimes from "@/components/PassTimes";
+import "./main.css";
 
 export default {
   name: "App",
@@ -28,11 +30,13 @@ export default {
 
 <style>
 #app {
+  margin: 0;
+  padding: 0;
+
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #455260;
 }
 </style>

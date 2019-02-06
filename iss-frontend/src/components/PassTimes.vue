@@ -1,17 +1,19 @@
 <template>
   <div>
     <h1>Pass Times</h1>
-    <div v-if="center">{{center}}</div>
+    <h3>Search a location and see when the ISS will be passing over it!</h3>
+    <!-- <div v-if="center">{{center}}</div> -->
     <gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
-    <button @click="placeForPassTimes">Search Area By Location</button>
-
+    <button @click="placeForPassTimes" class="findPassTimeButton">Find Pass Times</button>
+    <hr>
     <div v-if="passTimes">
+      <h2>{{currentPlaceSelected}}</h2>
       <div :key="index" v-for="(passTime, index) in passTimes.passes">
-        <h1>Pass #{{index}}</h1>
-        <h2>Start Time For Pass: {{realTime(passTime.startUTC)}}</h2>
-        <h2>End Time For Pass: {{realTime(passTime.endUTC)}}</h2>
+        <h3>Pass #{{index + 1}}</h3>
+        <h4>Start Time For Pass: {{realTime(passTime.startUTC)}}</h4>
+        <h4>End Time For Pass: {{realTime(passTime.endUTC)}}</h4>
       </div>
-      <button @click="saveLocationPassTimes">Save Location And Pass Times</button>
+      <!-- <button @click="saveLocationPassTimes">Save Location And Pass Times</button> -->
     </div>
   </div>
 </template>
@@ -28,6 +30,7 @@ export default {
       center: "",
       mapZoom: "",
       currentPlace: "",
+      currentPlaceSelected: "",
       passTimes: ""
     };
   },
@@ -38,7 +41,6 @@ export default {
   },
   methods: {
     saveLocationPassTimes() {
-      console.log(this.currentPlace);
       axios
         .post("http://localhost:3000/addTimePass", {
           name: this.currentPlace.formatted_address,
@@ -57,7 +59,7 @@ export default {
       this.currentPlace = place;
     },
     placeForPassTimes(place) {
-      console.log(this.currentPlace.formatted_address);
+      this.currentPlaceSelected = this.currentPlace.formatted_address;
       this.currentPlace.coordinates = {
         lat: this.currentPlace.geometry.location.lat(),
         lng: this.currentPlace.geometry.location.lng()
