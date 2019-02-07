@@ -5,7 +5,7 @@
       <GoogleMap class="map"></GoogleMap>
       <PassTimes class="passTimes"></PassTimes>
     </div>
-    <router-view/>
+    <!-- <router-view/> -->
   </div>
 </template>
 

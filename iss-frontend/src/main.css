@@ -14,11 +14,13 @@ body {
   margin: 10px;
 }
 
-/* .mapNpassTimesGrid {
+.mapNpassTimesGrid {
+  width: 100%;
   display: grid;
   grid-template-columns: 80% 20%;
   grid-template-rows: 100%;
-} */
+  height: 893px;
+}
 
 .map {
   grid-row: 1;
